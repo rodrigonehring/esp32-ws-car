@@ -1,103 +1,119 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 
-import ReactNipple from 'react-nipple'
-// import DebugView from 'react-nipple/lib/DebugView'
-import 'react-nipple/lib/styles.css'
+import nipplejs from 'nipplejs'
+import { throttle } from 'throttle-debounce'
 
-export default function Controls({ options, width, height }) {
-  const [state, setState] = useState()
+function ReactNipple({ options, onMove, onEnd }) {
+  const ref = useRef()
+  const np = useRef()
 
-  const handleJoystickStart = (evt, data) => {
-    console.log('handleJoystickStart', data)
-    setState(data)
-  }
+  useEffect(() => {
+    np.current = nipplejs.create({ ...options, zone: ref.current })
 
-  const handleJoystickEnd = (evt, data) => {
-    console.log('handleJoystickEnd', data)
-    setState(data)
-  }
+    return () => {
+      np.current.destroy()
+    }
+  }, [options])
 
-  const handleJoystickMove = (evt, data) => {
-    console.log('handleJoystickMove', data)
+  useEffect(() => {
+    if (!np.current) return
+    np.current.on('move', onMove)
+  }, [onMove])
 
-    // setState({ data })
-  }
+  useEffect(() => {
+    if (!np.current) return
+    np.current.on('end', onEnd)
+  }, [onEnd])
+
+  return (
+    <div style={{ width: 250, height: 250, position: 'relative' }}>
+      <div ref={ref} />
+    </div>
+  )
+}
+
+const optionsY = {
+  mode: 'static',
+  color: 'red',
+  lockY: true,
+  position: { top: '50%', left: '50%' }
+}
+
+export default function Controls({ ws }) {
+  const [moveY, setMoveY] = useState('')
+
+  useEffect(() => {
+    if (moveY) {
+      ws.send(moveY)
+    }
+  }, [moveY, ws])
+
+  const handleMoveY = useCallback(
+    throttle(100, (evt, data) => {
+      const speed = Math.floor(((data.distance / 50) * 100) / 20)
+
+      let dir = 'f'
+
+      if (Math.abs(data.angle.degree) < 180) {
+        dir = 'b'
+      }
+
+      setMoveY(`moveY-${dir}-${speed}`)
+    }),
+    []
+  )
+
+  const handleJoystickEnd = useCallback(() => {
+    setTimeout(() => {
+      setMoveY('moveY-stop')
+    }, 100)
+  }, [])
+
+  // const handleJoystickMove = (evt, data) => {
+  //   console.log('handleJoystickMove', data)
+
+  //   // setState({ data })
+  // }
 
   // const handleJoystickDir = (evt, data) => {
-  //   setState({ data })
+  //   console.log('handleJoystickDir', data)
   // }
 
   // const handleJoystickPlain = (evt, data) => {
-  //   setState({ data })
+  //   console.log('handleJoystickPlain', data)
   // }
 
   // const handleJoystickShown = (evt, data) => {
-  //   setState({ data })
+  //   console.log('handleJoystickShown', data)
   // }
 
   // const handleJoystickHidden = (evt, data) => {
-  //   setState({ data })
+  //   console.log('handleJoystickHidden', data)
   // }
 
   // const handleJoystickPressure = (evt, data) => {
-  //   setState({ data })
+  //   console.log('handleJoystickPressure', data)
   // }
 
-  console.log(state)
+  const common = (options) => ({
+    options: { mode: 'static', position: { top: '50%', left: '50%' }, ...options }
+  })
 
   return (
     <div className="sticks">
-      <ReactNipple
-        className="joystick"
-        style={{
-          outline: `1px dashed red`,
-          width: 250,
-          height: 250
-        }}
-        options={{
-          mode: 'static',
-          color: 'blue',
-          position: { top: '50%', left: '50%' },
-          lockX: true
-        }}
-      />
+      <ReactNipple {...common({ color: 'blue', lockX: true })} />
 
       <ReactNipple
-        className="joystick"
-        style={{
-          outline: `1px dashed blue`,
-          width: 250,
-          height: 250
-        }}
-        options={{
-          mode: 'static',
-          color: 'blue',
-          position: { top: '50%', left: '50%' },
-          lockY: true
-        }}
-        onStart={handleJoystickStart}
+        options={optionsY}
         onEnd={handleJoystickEnd}
-        onMove={handleJoystickMove}
-      />
-      {/*
-      <ReactNipple
-        className="joystick"
-        options={options}
-        style={{
-          outline: `1px dashed ${options.color}`,
-          width,
-          height
-        }}
-        onStart={handleJoystickStart}
-        onEnd={handleJoystickEnd}
-        onMove={handleJoystickMove}
+        onMove={handleMoveY}
         // onDir={handleJoystickDir}
         // onPlain={handleJoystickPlain}
         // onShown={handleJoystickShown}
         // onHidden={handleJoystickHidden}
         // onPressure={handleJoystickPressure}
-      /> 
-      */}
+      />
+
       {/* <DebugView data={state.data} /> */}
     </div>
   )

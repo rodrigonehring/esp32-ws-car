@@ -6933,6 +6933,11 @@ nipplejs@^0.7.1:
   resolved "https://registry.yarnpkg.com/nipplejs/-/nipplejs-0.7.3.tgz#8cff8a3c9452e7883e6e7fa16df67114e9b9317b"
   integrity sha512-3b6N5vdhaIIhuj2qRVhA8SjfZgsoB+WhKtrcq4Xowkgp+PD/kgYmdlqhiAIv2n1OzXdqqYT0mSZF+9Dr2LfqkA==
 
+nipplejs@^0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/nipplejs/-/nipplejs-0.8.5.tgz#9b16bd1fc70afadc35b09355b86dad65d863bafa"
+  integrity sha512-2G7warzUh4jIdmzSIDRCeXJUl/QrZyJ0QwFgI0V1lM34HLNsIqEX6uY0NY4V3wBDHNsub3me1cbFb/FJpWE/5g==
+
 no-case@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-3.0.3.tgz#c21b434c1ffe48b39087e86cfb4d2582e9df18f8"
@@ -9965,6 +9970,11 @@ throat@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-4.1.0.tgz#89037cbc92c56ab18926e6ba4cbb200e15672a6a"
   integrity sha1-iQN8vJLFarGJJua6TLsgDhVnKmo=
+
+throttle-debounce@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-2.1.0.tgz#257e648f0a56bd9e54fe0f132c4ab8611df4e1d5"
+  integrity sha512-AOvyNahXQuU7NN+VVvOOX+uW6FPaWdAOdRP5HfwYxAfCzXTFKRMoIMk+n+po318+ktcChx+F1Dd91G3YHeMKyg==
 
 through2@^2.0.0:
   version "2.0.5"
