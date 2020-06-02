@@ -8,7 +8,7 @@ const url = `ws://${ip}:80`
 function App() {
   React.useEffect(() => {
     const ws = new WebSocket(url)
-    console.log('mount', ws)
+    console.log('mount?', ws)
 
     ws.onmessage = (event) => {
       console.log('received message:', event.data)
